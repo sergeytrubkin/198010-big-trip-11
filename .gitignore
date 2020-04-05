@@ -10,5 +10,8 @@ Thumbs.db
 # Вспомогательные файлы
 *.log*
 node_modules/
+.eslintignore
 
-# Файлы сборки (допишите самостоятельно)
+# Файлы сборки
+public/bundle.js
+public/bundle.js.map
