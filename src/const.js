@@ -14,4 +14,14 @@ const TYPES_EVENT_ACTIVITY = [
   `restaurant`,
 ];
 
-export {TYPES_EVENT_TRANSFER, TYPES_EVENT_ACTIVITY};
+
+const DESTINATION_POINTS = [
+  `Chamonix`,
+  `Geneva`,
+  `Amsterdam`,
+  `Saint Petersburg`,
+  `Minsk`,
+  `Vitebsk`,
+];
+
+export {TYPES_EVENT_TRANSFER, TYPES_EVENT_ACTIVITY, DESTINATION_POINTS};

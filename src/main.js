@@ -4,17 +4,21 @@ import {createSectionInfoTemplate} from './components/section-info.js';
 import {createTripControlMenuTemplate} from './components/trip-control.js';
 import {createTripMainFilterTemplate} from './components/filter.js';
 import {createTripSortTemplate} from './components/sorting.js';
-import {createTripEventsFormTemplate} from './components/events.js';
-import {createEventDetailsTemplate} from './components/event-details.js';
-import {createEventDetailsOffersTemplate} from './components/event-offers.js';
-import {createEventDetailsDestinationTemplate} from './components/event-destination.js';
+import {createEventEditTemplate} from './components/event-edit.js';
+// import {createEventDetailsTemplate} from './components/event-details.js';
+// import {createEventDetailsOffersTemplate} from './components/event-offers.js';
+// import {createEventDescriptionTemplate} from './components/event-description.js';
 import {createTripDaysTemplate} from './components/days.js';
 // import {createDayContentTemplate} from './components/day-content.js';
 // import {createDayPointTemplate} from './components/day-point.js';
 // import {createDayEventOfferTemplate} from './components/day-event-offer.js';
 import {createDayTemplate} from './components/day.js';
+import {generatePoints} from './mock/point.js';
 
-const DAY_COUNT = 4;
+const DAY_COUNT = 7;
+const POINT_COUNT = 5;
+const points = generatePoints(POINT_COUNT);
+
 // const POINT_COUNT = 3;
 // const OFFER_COUNT = 2;
 
@@ -42,23 +46,27 @@ render(tripControl, createTripMainFilterTemplate(), `beforeend`);
 
 // main
 render(tripEvents, createTripSortTemplate(), `beforeend`);
-render(tripEvents, createTripEventsFormTemplate(), `beforeend`);
+render(tripEvents, createEventEditTemplate(points[0]), `beforeend`);
 
-const eventForm = document.querySelector(`.event`);
+// const eventForm = document.querySelector(`.event`);
 
-render(eventForm, createEventDetailsTemplate(), `beforeend`);
+// render(eventForm, createEventDetailsTemplate(), `beforeend`);
 
-const eventDetails = eventForm.querySelector(`.event__details`);
+// const eventDetails = eventForm.querySelector(`.event__details`);
 
-render(eventDetails, createEventDetailsOffersTemplate(), `beforeend`);
-render(eventDetails, createEventDetailsDestinationTemplate(), `beforeend`);
+// render(eventDetails, createEventDetailsOffersTemplate(), `beforeend`);
+// render(eventDetails, createEventDescriptionTemplate(), `beforeend`);
 
 render(tripEvents, createTripDaysTemplate(), `beforeend`);
 
 const tripDays = document.querySelector(`.trip-days`);
 
+
+// render(tripDays, createDayTemplate(points), `beforeend`);
+
+
 for (let i = 0; i < DAY_COUNT; i++) {
-  render(tripDays, createDayTemplate(), `afterbegin`);
+  render(tripDays, createDayTemplate(points, i + 1), `beforeend`);
 
   // const tripEventsList = document.querySelector(`.trip-events__list`);
 
