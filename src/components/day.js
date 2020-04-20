@@ -1,3 +1,4 @@
+import {MONTHS} from '../const.js';
 import {castTimeFormat, formatTime, formatDate} from '../util.js';
 
 const MILLISECOND_IN_SECOND = 1000;
@@ -21,8 +22,8 @@ const createDayEventOfferTemplate = (offer) => {
 const createDayPointTemplate = (point) => {
   const {eventType, destination, startTimeEvent, endTimeEvent, eventPrice, offers} = point;
 
-  const startTimeISO = formatDate(startTimeEvent, true);
-  const endTimeISO = formatDate(endTimeEvent, true);
+  const startTimeISO = `${formatDate(startTimeEvent, true)}T${formatTime(startTimeEvent)}`;
+  const endTimeISO = `${formatDate(endTimeEvent, true)}T${formatTime(endTimeEvent)}`;
   const startTimeEventForUser = formatTime(startTimeEvent);
   const endTimeEventForUser = formatTime(endTimeEvent);
 
@@ -87,7 +88,9 @@ const createDayPointTemplate = (point) => {
 };
 
 const createDayTemplate = (points, dayCount) => {
-  const date = `MAR 18`;
+  const startTime = points[0].startTimeEvent;
+  const starTimeDayISO = formatDate(startTime, true);
+  const startDay = `${MONTHS[startTime.getMonth()]} ${startTime.getDate()}`;
   const pointsData = [];
 
   for (const point of points) {
@@ -100,7 +103,7 @@ const createDayTemplate = (points, dayCount) => {
   <li class="trip-days__item  day">
     <div class="day__info">
       <span class="day__counter">${dayCount}</span>
-      <time class="day__date" datetime="2019-03-18">${date}</time>
+      <time class="day__date" datetime="${starTimeDayISO}">${startDay}</time>
     </div>
 
     <ul class="trip-events__list">

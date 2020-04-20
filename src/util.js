@@ -39,14 +39,13 @@ const formatTime = (date) => {
 
 // форматирование даты в формат 'dd/mm/yy hh:mm' либо ISO 'yyyy-mm-ddThh:mm' - второй параметр true
 const formatDate = (date, ISO = false) => {
-  const time = formatTime(date);
   const formattedDay = castTimeFormat(date.getDate());
   const formattedMonth = castTimeFormat(date.getMonth() + 1);
   const formattedYear = date.getFullYear().toString().substring(2);
   const formattedFullYear = date.getFullYear();
 
-  return ISO ? `${formattedFullYear}-${formattedMonth}-${formattedDay}T${time}` :
-    `${formattedDay}/${formattedMonth}/${formattedYear} ${time}`;
+  return ISO ? `${formattedFullYear}-${formattedMonth}-${formattedDay}` :
+    `${formattedDay}/${formattedMonth}/${formattedYear}`;
 };
 
 export {

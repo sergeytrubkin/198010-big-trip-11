@@ -1,5 +1,5 @@
 import {TYPES_EVENT_TRANSFER, TYPES_EVENT_ACTIVITY, DESTINATION_POINTS} from '../const.js';
-import {formatDate} from '../util.js';
+import {formatTime, formatDate} from '../util.js';
 
 const createTypeEventTemplate = (type) => {
   const uppercaseType = type[0].toUpperCase() + type.slice(1);
@@ -59,16 +59,18 @@ const createPhotoTemplate = (linkPhoto) => {
 
 // описание точки маршрута
 export const createDescriptionTemplate = (description, linksPhoto) => {
-  const photoMarkup = linksPhoto
+  const descriptionText = description ? description : ``;
+
+  const photoMarkup = linksPhoto ? linksPhoto
     .map((link) => {
       return createPhotoTemplate(link);
     })
-    .join(`\n`);
+    .join(`\n`) : ``;
 
   return (`
   <section class="event__section  event__section--destination">
     <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-    <p class="event__destination-description">${description}</p>
+    <p class="event__destination-description">${descriptionText}</p>
 
     <div class="event__photos-container">
       <div class="event__photos-tape">
@@ -82,11 +84,17 @@ export const createDescriptionTemplate = (description, linksPhoto) => {
 const createEventEditTemplate = (point) => {
   const {eventType, destination, startTimeEvent, endTimeEvent, eventPrice, offers, description, photo} = point;
 
-  const startTime = formatDate(startTimeEvent);
-  const endTime = formatDate(endTimeEvent);
-  const descriptionMarkup = createDescriptionTemplate(description, photo);
-  const offersMarkup = createOffersTemplate(offers);
+  const nowDate = new Date();
+  const startTimeDefined = startTimeEvent ? startTimeEvent : nowDate;
+  const endTimeDefined = endTimeEvent ? endTimeEvent : nowDate;
 
+  const typeEvent = eventType ? eventType : TYPES_EVENT_TRANSFER[0];
+  const destinationPoint = destination ? destination : ``;
+  const startTime = `${formatDate(startTimeDefined)} ${formatTime(startTimeDefined)}`;
+  const endTime = `${formatDate(endTimeDefined)} ${formatTime(endTimeDefined)}`;
+  const price = eventPrice ? eventPrice : ``;
+  const descriptionMarkup = description || photo ? createDescriptionTemplate(description, photo) : ``;
+  const offersMarkup = offers ? createOffersTemplate(offers) : ``;
 
   const typesEventTransferMarkup = TYPES_EVENT_TRANSFER
     .map((it) => {
@@ -113,7 +121,7 @@ const createEventEditTemplate = (point) => {
       <div class="event__type-wrapper">
         <label class="event__type  event__type-btn" for="event-type-toggle-1">
           <span class="visually-hidden">Choose event type</span>
-          <img class="event__type-icon" width="17" height="17" src="img/icons/${eventType}.png" alt="Event type icon">
+          <img class="event__type-icon" width="17" height="17" src="img/icons/${typeEvent}.png" alt="Event type icon">
         </label>
         <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
@@ -132,10 +140,10 @@ const createEventEditTemplate = (point) => {
 
       <div class="event__field-group  event__field-group--destination">
         <label class="event__label  event__type-output" for="event-destination-1">
-          ${eventType} to
+          ${typeEvent} to
         </label>
         <input class="event__input  event__input--destination" id="event-destination-1" type="text"
-          name="event-destination" value="${destination}" list="destination-list-1">
+          name="event-destination" value="${destinationPoint}" list="destination-list-1">
         <datalist id="destination-list-1">
           ${destinationsMarkup}
         </datalist>
@@ -160,7 +168,7 @@ const createEventEditTemplate = (point) => {
           <span class="visually-hidden">Price</span>
           &euro;
         </label>
-        <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${eventPrice}">
+        <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}">
       </div>
 
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>

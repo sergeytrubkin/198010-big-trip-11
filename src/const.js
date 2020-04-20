@@ -1,3 +1,18 @@
+const MONTHS = [
+  `JAN`,
+  `FEB`,
+  `MAR`,
+  `APR`,
+  `MAY`,
+  `JUN`,
+  `JUL`,
+  `AUG`,
+  `SEP`,
+  `OCT`,
+  `NOV`,
+  `DEC`,
+];
+
 const TYPES_EVENT_TRANSFER = [
   `taxi`,
   `bus`,
@@ -14,7 +29,6 @@ const TYPES_EVENT_ACTIVITY = [
   `restaurant`,
 ];
 
-
 const DESTINATION_POINTS = [
   `Chamonix`,
   `Geneva`,
@@ -24,4 +38,4 @@ const DESTINATION_POINTS = [
   `Vitebsk`,
 ];
 
-export {TYPES_EVENT_TRANSFER, TYPES_EVENT_ACTIVITY, DESTINATION_POINTS};
+export {MONTHS, TYPES_EVENT_TRANSFER, TYPES_EVENT_ACTIVITY, DESTINATION_POINTS};
