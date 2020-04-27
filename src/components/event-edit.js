@@ -1,5 +1,5 @@
 import {TYPES_EVENT_TRANSFER, TYPES_EVENT_ACTIVITY, DESTINATION_POINTS} from '../const.js';
-import {formatTime, formatDate} from '../util.js';
+import {formatTime, formatDate, createElement} from '../utils.js';
 
 const createTypeEventTemplate = (type) => {
   const uppercaseType = type[0].toUpperCase() + type.slice(1);
@@ -115,8 +115,8 @@ const createEventEditTemplate = (point) => {
     .join(`\n`);
 
 
-  return (`
-  <form class="trip-events__item  event  event--edit" action="#" method="post">
+  return (
+    `<form class="trip-events__item  event  event--edit" action="#" method="post">
     <header class="event__header">
       <div class="event__type-wrapper">
         <label class="event__type  event__type-btn" for="event-type-toggle-1">
@@ -179,4 +179,25 @@ const createEventEditTemplate = (point) => {
   </form>`);
 };
 
-export {createEventEditTemplate};
+export default class EventEdit {
+  constructor(point) {
+    this._point = point;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createEventEditTemplate(this._point);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

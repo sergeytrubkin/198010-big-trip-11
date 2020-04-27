@@ -1,5 +1,5 @@
 import {MONTHS} from '../const.js';
-import {castTimeFormat, formatTime, formatDate} from '../util.js';
+import {castTimeFormat, formatTime, formatDate, createElement} from '../utils.js';
 
 const MILLISECOND_IN_SECOND = 1000;
 const SECOND_IN_MINUTE = 60;
@@ -10,8 +10,8 @@ const HOUR_IN_DAY = 24;
 const createDayEventOfferTemplate = (offer) => {
   const {title, cost} = offer;
 
-  return (`
-    <li class="event__offer">
+  return (
+    `<li class="event__offer">
       <span class="event__offer-title">${title}</span>
       &plus;
       &euro;&nbsp;<span class="event__offer-price">${cost}</span>
@@ -112,4 +112,26 @@ const createDayTemplate = (points, dayCount) => {
   </li>`);
 };
 
-export {createDayTemplate};
+export default class Day {
+  constructor(points, dayCount) {
+    this._points = points;
+    this._dayCount = dayCount;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createDayTemplate(this._points, this._dayCount);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate);
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

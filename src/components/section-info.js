@@ -1,3 +1,5 @@
+import {createElement} from '../utils.js';
+
 // описание маршрута
 const createTripInfoTemplate = (info, start, end) => {
   return (`
@@ -18,7 +20,7 @@ const createTripInfoCostTemplate = (cost) => {
 };
 
 // создание секции для описания маршрута и его стоимости
-export const createSectionInfoTemplate = () => {
+const createSectionInfoTemplate = () => {
   const totalCost = `1230`;
   const pointNameInfo = `Amsterdam &mdash; Chamonix &mdash; Geneva`;
   const startDay = `Mar 18`;
@@ -34,3 +36,25 @@ export const createSectionInfoTemplate = () => {
     </section>`
   );
 };
+
+export default class SectionInfo {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createSectionInfoTemplate();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
