@@ -7,6 +7,7 @@ import EventEditComponent from './components/event-edit.js';
 import DaysComponent from './components/days.js';
 import EventsComponent from './components/events.js';
 import DayComponent from './components/day.js';
+import NoEventsComponent from './components/no-events.js';
 import {generateEvents} from './mock/event.js';
 import {RenderPosition, render} from './utils.js';
 
@@ -67,8 +68,12 @@ const renderDay = (tripDayList, eventsOnDay, day) => {
 };
 
 // отрисовка всех событий
-const renderDays = (container, allEvents) => {
-  const eventSection = new EventsComponent();
+const renderDays = (eventSection, allEvents) => {
+
+  if (Object.keys(allEvents).length === 0) {
+    render(eventSection.getElement(), new NoEventsComponent().getElement());
+    return;
+  }
 
   render(eventSection.getElement(), new TripSortComponent().getElement());
   render(eventSection.getElement(), new DaysComponent().getElement());
@@ -80,7 +85,7 @@ const renderDays = (container, allEvents) => {
     renderDay(dayList, eventsOnDay, i + 1);
   }
 
-  render(container, eventSection.getElement());
+  render(eventSection, eventSection.getElement());
 };
 
 const siteHeader = document.querySelector(`.trip-main`);
@@ -95,4 +100,6 @@ render(controlMenu, new TripControlMenuComponent().getElement(), RenderPosition.
 render(tripControl, new TripMainFilterComponent().getElement());
 
 // main
-renderDays(pageMainContent, events);
+const eventSection = new EventsComponent();
+render(pageMainContent, eventSection.getElement());
+renderDays(eventSection, events);
