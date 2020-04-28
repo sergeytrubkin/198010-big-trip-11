@@ -24,9 +24,22 @@ const renderEvent = (tripEventList, event) => {
     tripEventList.replaceChild(eventComponent.getElement(), eventEditComponent.getElement());
   };
 
+  const onEscKeyDown = (evt) => {
+    const isEscKey = evt.key === `Esc` || evt.key === `Escape`;
+
+    if (isEscKey) {
+      replaceEditToEvent();
+      document.removeEventListener(`keydown`, onEscKeyDown);
+    }
+  };
+
   const eventComponent = new EventComponent(event);
   const editButton = eventComponent.getElement().querySelector(`.event__rollup-btn`);
-  editButton.addEventListener(`click`, replaceEventToEdit);
+  editButton.addEventListener(`click`, () => {
+    replaceEventToEdit();
+
+    document.addEventListener(`keydown`, onEscKeyDown);
+  });
 
   const eventEditComponent = new EventEditComponent(event);
   const editForm = eventEditComponent.getElement().querySelector(`form`);
@@ -34,6 +47,8 @@ const renderEvent = (tripEventList, event) => {
     evt.preventDefault();
 
     replaceEditToEvent();
+
+    document.removeEventListener(`keydown`, onEscKeyDown);
   });
 
   render(tripEventList, eventComponent.getElement());
