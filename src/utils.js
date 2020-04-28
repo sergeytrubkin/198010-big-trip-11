@@ -1,6 +1,7 @@
 const RenderPosition = {
   AFTERBEGIN: `afterbegin`,
   BEFOREEND: `beforeend`,
+  AFTEREND: `after`,
 };
 
 // определение рандомного числа из диапазона чисел
@@ -58,16 +59,19 @@ const createElement = (template) => {
   newElement.innerHTML = template;
 
   return newElement.firstChild;
-}
+};
 
 // функция отрисовки компонента
 const render = (container, element, place = RenderPosition.BEFOREEND) => {
   switch (place) {
     case RenderPosition.BEFOREEND:
-      container.prepend(element);
+      container.append(element);
       break;
     case RenderPosition.AFTERBEGIN:
-      container.append(element);
+      container.prepend(element);
+      break;
+    case RenderPosition.AFTEREND:
+      container.after(element);
       break;
   }
 };
