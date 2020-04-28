@@ -1,7 +1,7 @@
 import {createElement} from '../utils.js';
 
 // сортировка
-export const createTripSortTemplate = () =>
+const createTripSortTemplate = () =>
   `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
     <span class="trip-sort__item  trip-sort__item--day">Day</span>
 
