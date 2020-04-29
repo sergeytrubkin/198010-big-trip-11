@@ -16,7 +16,7 @@ const EVENT_COUNT = 5;
 const events = generateEvents(EVENT_COUNT);
 
 // отрисовка одного события
-const renderEvent = (tripEventList, event) => {
+const renderEvent = (tripEventList, event, indexID) => {
   const replaceEventToEdit = () => {
     tripEventList.replaceChild(eventEditComponent.getElement(), eventComponent.getElement());
   };
@@ -42,7 +42,7 @@ const renderEvent = (tripEventList, event) => {
     document.addEventListener(`keydown`, onEscKeyDown);
   });
 
-  const eventEditComponent = new EventEditComponent(event);
+  const eventEditComponent = new EventEditComponent(event, indexID);
   const editForm = eventEditComponent.getElement().querySelector(`form`);
   editForm.addEventListener(`submit`, (evt) => {
     evt.preventDefault();
@@ -60,8 +60,8 @@ const renderDay = (tripDayList, eventsOnDay, day) => {
   const dayComponent = new DayComponent(eventsOnDay, day);
   const eventList = dayComponent.getElement().querySelector(`.trip-events__list`);
 
-  eventsOnDay.forEach((event) => {
-    return renderEvent(eventList, event);
+  eventsOnDay.forEach((event, index) => {
+    renderEvent(eventList, event, index + day.toString());
   });
 
   render(tripDayList, dayComponent.getElement());
