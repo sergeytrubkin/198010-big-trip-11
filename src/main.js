@@ -68,7 +68,8 @@ const renderDay = (tripDayList, eventsOnDay, day) => {
 };
 
 // отрисовка всех событий
-const renderDays = (eventSection, allEvents) => {
+const renderDays = (daysContainer, allEvents) => {
+  const eventSection = new EventsComponent();
 
   if (Object.keys(allEvents).length === 0) {
     render(eventSection.getElement(), new NoEventsComponent().getElement());
@@ -85,7 +86,7 @@ const renderDays = (eventSection, allEvents) => {
     renderDay(dayList, eventsOnDay, i + 1);
   }
 
-  render(eventSection, eventSection.getElement());
+  render(daysContainer, eventSection.getElement());
 };
 
 const siteHeader = document.querySelector(`.trip-main`);
@@ -100,6 +101,4 @@ render(controlMenu, new TripControlMenuComponent().getElement(), RenderPosition.
 render(tripControl, new TripMainFilterComponent().getElement());
 
 // main
-const eventSection = new EventsComponent();
-render(pageMainContent, eventSection.getElement());
-renderDays(eventSection, events);
+renderDays(pageMainContent, events);
