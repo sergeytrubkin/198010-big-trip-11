@@ -29,7 +29,7 @@ const TYPES_EVENT_ACTIVITY = [
   `restaurant`,
 ];
 
-const DESTINATION_POINTS = [
+const DESTINATION_EVENTS = [
   `Chamonix`,
   `Geneva`,
   `Amsterdam`,
@@ -38,4 +38,4 @@ const DESTINATION_POINTS = [
   `Vitebsk`,
 ];
 
-export {MONTHS, TYPES_EVENT_TRANSFER, TYPES_EVENT_ACTIVITY, DESTINATION_POINTS};
+export {MONTHS, TYPES_EVENT_TRANSFER, TYPES_EVENT_ACTIVITY, DESTINATION_EVENTS};

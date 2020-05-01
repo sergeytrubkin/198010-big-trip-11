@@ -1,3 +1,9 @@
+const RenderPosition = {
+  AFTERBEGIN: `afterbegin`,
+  BEFOREEND: `beforeend`,
+  AFTEREND: `after`,
+};
+
 // определение рандомного числа из диапазона чисел
 const getRandomBetween = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -48,7 +54,30 @@ const formatDate = (date, ISO = false) => {
     `${formattedDay}/${formattedMonth}/${formattedYear}`;
 };
 
+const createElement = (template) => {
+  const newElement = document.createElement(`div`);
+  newElement.innerHTML = template;
+
+  return newElement.firstChild;
+};
+
+// функция отрисовки компонента
+const render = (container, element, place = RenderPosition.BEFOREEND) => {
+  switch (place) {
+    case RenderPosition.BEFOREEND:
+      container.append(element);
+      break;
+    case RenderPosition.AFTERBEGIN:
+      container.prepend(element);
+      break;
+    case RenderPosition.AFTEREND:
+      container.after(element);
+      break;
+  }
+};
+
 export {
+  RenderPosition,
   getRandomBetween,
   getRandomElement,
   getRandomNumberElements,
@@ -56,4 +85,6 @@ export {
   castTimeFormat,
   formatTime,
   formatDate,
+  createElement,
+  render,
 };

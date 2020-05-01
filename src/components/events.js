@@ -1,16 +1,17 @@
 import {createElement} from '../utils.js';
 
-// создание нового дня маршрута
-const createTripDaysTemplate = () =>
-  `<ul class="trip-days"></ul>`;
+const createEventsTemplate = () =>
+  `<section class="trip-events">
+    <h2 class="visually-hidden">Trip events</h2>
+  </section>`;
 
-export default class TripDays {
+export default class Events {
   constructor() {
     this._element = null;
   }
 
   getTemplate() {
-    return createTripDaysTemplate();
+    return createEventsTemplate();
   }
 
   getElement() {

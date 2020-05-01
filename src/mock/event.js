@@ -1,5 +1,5 @@
-import {TYPES_EVENT_TRANSFER, TYPES_EVENT_ACTIVITY, DESTINATION_POINTS} from '../const.js';
-import {getRandomBetween, getRandomElement, getRandomMultipleNumber} from '../util.js';
+import {TYPES_EVENT_TRANSFER, TYPES_EVENT_ACTIVITY, DESTINATION_EVENTS} from '../const.js';
+import {getRandomBetween, getRandomElement, getRandomMultipleNumber} from '../utils.js';
 
 const DESCRIPTIONS = [
   `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
@@ -17,7 +17,7 @@ const LINKS_PHOTO = [
   `img/photos/5.jpg`,
 ];
 
-const offersPoint = [
+const offersEvent = [
   {
     type: `luggage`,
     title: `Add luggage`,
@@ -65,23 +65,23 @@ const getRandomDate = () => {
   return targetDate;
 };
 
-const generatePoint = () => {
+const generateEvent = () => {
   return {
     eventType: getRandomElement(ALL_TYPES_EVENTS),
-    destination: getRandomElement(DESTINATION_POINTS),
+    destination: getRandomElement(DESTINATION_EVENTS),
     startTimeEvent: new Date(),
     endTimeEvent: getRandomDate(),
     eventPrice: getRandomMultipleNumber(MIN_PRICE, MAX_PRICE, MULTIPLE),
-    offers: getRandomArrayLength(0, offersPoint),
+    offers: getRandomArrayLength(0, offersEvent),
     description: getRandomArrayLength(1, DESCRIPTIONS),
     photo: getRandomArrayLength(1, LINKS_PHOTO),
   };
 };
 
-const generatePoints = (count) => {
+const generateEvents = (count) => {
   return new Array(count)
     .fill(``)
-    .map(generatePoint);
+    .map(generateEvent);
 };
 
-export {generatePoints};
+export {generateEvents};
