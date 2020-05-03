@@ -7,6 +7,7 @@ import EventEditComponent from './components/event-edit.js';
 import DaysComponent from './components/days.js';
 import EventsComponent from './components/events.js';
 import DayComponent from './components/day.js';
+import NoEventsComponent from './components/no-events.js';
 import {generateEvents} from './mock/event.js';
 import {RenderPosition, render} from './utils.js';
 
@@ -15,7 +16,7 @@ const EVENT_COUNT = 5;
 const events = generateEvents(EVENT_COUNT);
 
 // отрисовка одного события
-const renderEvent = (tripEventList, event) => {
+const renderEvent = (tripEventList, event, indexID) => {
   const replaceEventToEdit = () => {
     tripEventList.replaceChild(eventEditComponent.getElement(), eventComponent.getElement());
   };
@@ -24,16 +25,31 @@ const renderEvent = (tripEventList, event) => {
     tripEventList.replaceChild(eventComponent.getElement(), eventEditComponent.getElement());
   };
 
+  const onEscKeyDown = (evt) => {
+    const isEscKey = evt.key === `Esc` || evt.key === `Escape`;
+
+    if (isEscKey) {
+      replaceEditToEvent();
+      document.removeEventListener(`keydown`, onEscKeyDown);
+    }
+  };
+
   const eventComponent = new EventComponent(event);
   const editButton = eventComponent.getElement().querySelector(`.event__rollup-btn`);
-  editButton.addEventListener(`click`, replaceEventToEdit);
+  editButton.addEventListener(`click`, () => {
+    replaceEventToEdit();
 
-  const eventEditComponent = new EventEditComponent(event);
+    document.addEventListener(`keydown`, onEscKeyDown);
+  });
+
+  const eventEditComponent = new EventEditComponent(event, indexID);
   const editForm = eventEditComponent.getElement().querySelector(`form`);
   editForm.addEventListener(`submit`, (evt) => {
     evt.preventDefault();
 
     replaceEditToEvent();
+
+    document.removeEventListener(`keydown`, onEscKeyDown);
   });
 
   render(tripEventList, eventComponent.getElement());
@@ -44,16 +60,21 @@ const renderDay = (tripDayList, eventsOnDay, day) => {
   const dayComponent = new DayComponent(eventsOnDay, day);
   const eventList = dayComponent.getElement().querySelector(`.trip-events__list`);
 
-  eventsOnDay.forEach((event) => {
-    return renderEvent(eventList, event);
+  eventsOnDay.forEach((event, index) => {
+    renderEvent(eventList, event, index + day.toString());
   });
 
   render(tripDayList, dayComponent.getElement());
 };
 
 // отрисовка всех событий
-const renderDays = (container, allEvents) => {
+const renderDays = (daysContainer, allEvents) => {
   const eventSection = new EventsComponent();
+
+  if (Object.keys(allEvents).length === 0) {
+    render(eventSection.getElement(), new NoEventsComponent().getElement());
+    return;
+  }
 
   render(eventSection.getElement(), new TripSortComponent().getElement());
   render(eventSection.getElement(), new DaysComponent().getElement());
@@ -65,7 +86,7 @@ const renderDays = (container, allEvents) => {
     renderDay(dayList, eventsOnDay, i + 1);
   }
 
-  render(container, eventSection.getElement());
+  render(daysContainer, eventSection.getElement());
 };
 
 const siteHeader = document.querySelector(`.trip-main`);

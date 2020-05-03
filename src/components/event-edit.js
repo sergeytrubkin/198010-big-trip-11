@@ -1,14 +1,14 @@
 import {TYPES_EVENT_TRANSFER, TYPES_EVENT_ACTIVITY, DESTINATION_EVENTS} from '../const.js';
 import {formatTime, formatDate, createElement} from '../utils.js';
 
-const createTypeEventTemplate = (type) => {
+const createTypeEventTemplate = (type, index) => {
   const uppercaseType = type[0].toUpperCase() + type.slice(1);
 
   return (
     `<div class="event__type-item">
-      <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type"
+      <input id="event-type-${type}-${index}" class="event__type-input  visually-hidden" type="radio" name="event-type"
         value="${type}">
-      <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">${uppercaseType}</label>
+      <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-${index}">${uppercaseType}</label>
     </div>`);
 };
 
@@ -18,15 +18,15 @@ const createDestinationItemTemplate = (destination) => {
 };
 
 // шаблон одного предложения
-const createOfferItemTemplate = (offer, isChecked) => {
+const createOfferItemTemplate = (offer, index, isChecked) => {
   const {type, title, cost} = offer;
   const inputChecked = isChecked ? `checked` : ``;
 
   return (
     `<div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${type}-1" type="checkbox"
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${type}-${index}" type="checkbox"
         name="event-offer-${type}" ${inputChecked}>
-      <label class="event__offer-label" for="event-offer-${type}-1">
+      <label class="event__offer-label" for="event-offer-${type}-${index}">
         <span class="event__offer-title">${title}</span>
         &plus;
         &euro;&nbsp;<span class="event__offer-price">${cost}</span>
@@ -37,8 +37,8 @@ const createOfferItemTemplate = (offer, isChecked) => {
 // шаблон секции всех предложений в указанной точке маршрута
 const createOffersTemplate = (offers) => {
   const offerMarkup = offers
-    .map((offer) => {
-      return createOfferItemTemplate(offer);
+    .map((offer, index) => {
+      return createOfferItemTemplate(offer, index);
     })
     .join(`\n`);
 
@@ -81,7 +81,7 @@ export const createDescriptionTemplate = (description, linksPhoto) => {
 };
 
 // форма создания(редактирования) пути
-const createEventEditTemplate = (event) => {
+const createEventEditTemplate = (event, indexId) => {
   const {eventType, destination, startTimeEvent, endTimeEvent, eventPrice, offers, description, photo} = event;
 
   const nowDate = new Date();
@@ -98,13 +98,13 @@ const createEventEditTemplate = (event) => {
 
   const typesEventTransferMarkup = TYPES_EVENT_TRANSFER
     .map((it) => {
-      return createTypeEventTemplate(it);
+      return createTypeEventTemplate(it, indexId);
     })
     .join(`\n`);
 
   const typesEventActivityMarkup = TYPES_EVENT_ACTIVITY
     .map((it) => {
-      return createTypeEventTemplate(it);
+      return createTypeEventTemplate(it, indexId);
     })
     .join(`\n`);
 
@@ -120,12 +120,12 @@ const createEventEditTemplate = (event) => {
       <form class="trip-events__item  event  event--edit" action="#" method="post">
         <header class="event__header">
           <div class="event__type-wrapper">
-            <label class="event__type  event__type-btn" for="event-type-toggle-1">
+            <label class="event__type  event__type-btn" for="event-type-toggle-${indexId}">
               <span class="visually-hidden">Choose event type</span>
               <img class="event__type-icon" width="17" height="17" src="img/icons/${typeEvent}.png"
                 alt="Event type icon">
             </label>
-            <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
+            <input class="event__type-toggle  visually-hidden" id="event-type-toggle-${indexId}" type="checkbox">
 
             <div class="event__type-list">
               <fieldset class="event__type-group">
@@ -141,36 +141,36 @@ const createEventEditTemplate = (event) => {
           </div>
 
           <div class="event__field-group  event__field-group--destination">
-            <label class="event__label  event__type-output" for="event-destination-1">
+            <label class="event__label  event__type-output" for="event-destination-${indexId}">
               ${typeEvent} to
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-1" type="text"
-              name="event-destination" value="${destinationEvent}" list="destination-list-1">
-            <datalist id="destination-list-1">
+            <input class="event__input  event__input--destination" id="event-destination-${indexId}" type="text"
+              name="event-destination" value="${destinationEvent}" list="destination-list-${indexId}">
+            <datalist id="destination-list-${indexId}">
               ${destinationsMarkup}
             </datalist>
           </div>
 
           <div class="event__field-group  event__field-group--time">
-            <label class="visually-hidden" for="event-start-time-1">
+            <label class="visually-hidden" for="event-start-time-${indexId}">
               From
             </label>
-            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time"
+            <input class="event__input  event__input--time" id="event-start-time-${indexId}" type="text" name="event-start-time"
               value="${startTime}">
             &mdash;
-            <label class="visually-hidden" for="event-end-time-1">
+            <label class="visually-hidden" for="event-end-time-${indexId}">
               To
             </label>
-            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time"
+            <input class="event__input  event__input--time" id="event-end-time-${indexId}" type="text" name="event-end-time"
               value="${endTime}">
           </div>
 
           <div class="event__field-group  event__field-group--price">
-            <label class="event__label" for="event-price-1">
+            <label class="event__label" for="event-price-${indexId}">
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price"
+            <input class="event__input  event__input--price" id="event-price-${indexId}" type="text" name="event-price"
               value="${price}">
           </div>
 
@@ -184,13 +184,14 @@ const createEventEditTemplate = (event) => {
 };
 
 export default class EventEdit {
-  constructor(event) {
+  constructor(event, indexId) {
     this._event = event;
+    this._indexId = indexId;
     this._element = null;
   }
 
   getTemplate() {
-    return createEventEditTemplate(this._event);
+    return createEventEditTemplate(this._event, this._indexId);
   }
 
   getElement() {

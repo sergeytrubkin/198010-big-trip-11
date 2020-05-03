@@ -18,8 +18,8 @@ const createDayEventOfferTemplate = (offer) => {
 };
 
 
-const createEventTemplate = (point) => {
-  const {eventType, destination, startTimeEvent, endTimeEvent, eventPrice, offers} = point;
+const createEventTemplate = (event) => {
+  const {eventType, destination, startTimeEvent, endTimeEvent, eventPrice, offers} = event;
 
   const startTimeISO = `${formatDate(startTimeEvent, true)}T${formatTime(startTimeEvent)}`;
   const endTimeISO = `${formatDate(endTimeEvent, true)}T${formatTime(endTimeEvent)}`;
