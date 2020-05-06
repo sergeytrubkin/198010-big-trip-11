@@ -1,4 +1,4 @@
-import {createElement} from '../utils.js';
+import AbstractComponent from '../components/abstract-component.js';
 
 // меню
 const createTripControlMenuTemplate = () =>
@@ -7,24 +7,8 @@ const createTripControlMenuTemplate = () =>
     <a class="trip-tabs__btn" href="#">Stats</a>
   </nav>`;
 
-export default class TripControl {
-  constructor() {
-    this._element = null;
-  }
-
+export default class TripControl extends AbstractComponent {
   getTemplate() {
     return createTripControlMenuTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

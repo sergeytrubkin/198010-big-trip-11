@@ -1,5 +1,6 @@
+import AbstractComponent from '../components/abstract-component.js';
 import {TYPES_EVENT_TRANSFER, TYPES_EVENT_ACTIVITY, DESTINATION_EVENTS} from '../const.js';
-import {formatTime, formatDate, createElement} from '../utils.js';
+import {formatTime, formatDate} from '../utils.js';
 
 const createTypeEventTemplate = (type, index) => {
   const uppercaseType = type[0].toUpperCase() + type.slice(1);
@@ -183,26 +184,15 @@ const createEventEditTemplate = (event, indexId) => {
     </li>`);
 };
 
-export default class EventEdit {
+export default class EventEdit extends AbstractComponent {
   constructor(event, indexId) {
+    super();
+
     this._event = event;
     this._indexId = indexId;
-    this._element = null;
   }
 
   getTemplate() {
     return createEventEditTemplate(this._event, this._indexId);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

@@ -1,5 +1,6 @@
+import AbstractComponent from '../components/abstract-component.js';
 import {MONTHS} from '../const.js';
-import {formatDate, createElement} from '../utils.js';
+import {formatDate} from '../utils.js';
 
 const createDayTemplate = (points, dayCount) => {
   const startTime = points[0].startTimeEvent;
@@ -18,26 +19,15 @@ const createDayTemplate = (points, dayCount) => {
   </li>`);
 };
 
-export default class Day {
+export default class Day extends AbstractComponent {
   constructor(points, dayCount) {
+    super();
+
     this._points = points;
     this._dayCount = dayCount;
-    this._element = null;
   }
 
   getTemplate() {
     return createDayTemplate(this._points, this._dayCount);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

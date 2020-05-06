@@ -1,4 +1,4 @@
-import {createElement} from '../utils.js';
+import AbstractComponent from '../components/abstract-component.js';
 
 // описание маршрута
 const createTripInfoTemplate = (info, start, end) => {
@@ -37,24 +37,8 @@ const createSectionInfoTemplate = () => {
   );
 };
 
-export default class SectionInfo {
-  constructor() {
-    this._element = null;
-  }
-
+export default class SectionInfo extends AbstractComponent {
   getTemplate() {
     return createSectionInfoTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
