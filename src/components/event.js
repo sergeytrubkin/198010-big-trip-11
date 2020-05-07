@@ -1,5 +1,5 @@
 import AbstractComponent from '../components/abstract-component.js';
-import {castTimeFormat, formatTime, formatDate} from '../utils.js';
+import {castTimeFormat, formatTime, formatDate} from '../utils/common.js';
 
 const MILLISECOND_IN_SECOND = 1000;
 const SECOND_IN_MINUTE = 60;
@@ -52,6 +52,7 @@ const createEventTemplate = (event) => {
     .map((offer) => {
       return createDayEventOfferTemplate(offer);
     })
+    .slice(0, 3)
     .join(`\n`);
 
   return (
