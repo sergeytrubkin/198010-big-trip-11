@@ -1,6 +1,6 @@
 import AbstractComponent from '../components/abstract-component.js';
 import {MONTHS} from '../const.js';
-import {formatDate} from '../utils.js';
+import {formatDate} from '../utils/common.js';
 
 const createDayTemplate = (points, dayCount) => {
   const startTime = points[0].startTimeEvent;

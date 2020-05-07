@@ -1,6 +1,6 @@
 import AbstractComponent from '../components/abstract-component.js';
 import {TYPES_EVENT_TRANSFER, TYPES_EVENT_ACTIVITY, DESTINATION_EVENTS} from '../const.js';
-import {formatTime, formatDate} from '../utils.js';
+import {formatTime, formatDate} from '../utils/common.js';
 
 const createTypeEventTemplate = (type, index) => {
   const uppercaseType = type[0].toUpperCase() + type.slice(1);

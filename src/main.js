@@ -9,7 +9,7 @@ import EventsComponent from './components/events.js';
 import DayComponent from './components/day.js';
 import NoEventsComponent from './components/no-events.js';
 import {generateEvents} from './mock/event.js';
-import {RenderPosition, render} from './utils.js';
+import {RenderPosition, render, replace} from './utils/render.js';
 
 const DAY_COUNT = 7;
 const EVENT_COUNT = 5;
@@ -17,13 +17,11 @@ const events = generateEvents(EVENT_COUNT);
 
 // отрисовка одного события
 const renderEvent = (tripEventList, event, indexID) => {
-  const replaceEventToEdit = () => {
-    tripEventList.replaceChild(eventEditComponent.getElement(), eventComponent.getElement());
-  };
 
-  const replaceEditToEvent = () => {
-    tripEventList.replaceChild(eventComponent.getElement(), eventEditComponent.getElement());
-  };
+
+  const replaceEventToEdit = () => replace(eventEditComponent, eventComponent);
+
+  const replaceEditToEvent = () => replace(eventComponent, eventEditComponent);
 
   const onEscKeyDown = (evt) => {
     const isEscKey = evt.key === `Esc` || evt.key === `Escape`;
@@ -52,7 +50,7 @@ const renderEvent = (tripEventList, event, indexID) => {
     document.removeEventListener(`keydown`, onEscKeyDown);
   });
 
-  render(tripEventList, eventComponent.getElement());
+  render(tripEventList, eventComponent);
 };
 
 // отрисовка одного дня
@@ -64,7 +62,7 @@ const renderDay = (tripDayList, eventsOnDay, day) => {
     renderEvent(eventList, event, index + day.toString());
   });
 
-  render(tripDayList, dayComponent.getElement());
+  render(tripDayList, dayComponent);
 };
 
 // отрисовка всех событий
@@ -72,12 +70,12 @@ const renderDays = (daysContainer, allEvents) => {
   const eventSection = new EventsComponent();
 
   if (Object.keys(allEvents).length === 0) {
-    render(eventSection.getElement(), new NoEventsComponent().getElement());
+    render(eventSection.getElement(), new NoEventsComponent());
     return;
   }
 
-  render(eventSection.getElement(), new TripSortComponent().getElement());
-  render(eventSection.getElement(), new DaysComponent().getElement());
+  render(eventSection.getElement(), new TripSortComponent());
+  render(eventSection.getElement(), new DaysComponent());
 
   const dayList = eventSection.getElement().querySelector(`.trip-days`);
 
@@ -86,7 +84,7 @@ const renderDays = (daysContainer, allEvents) => {
     renderDay(dayList, eventsOnDay, i + 1);
   }
 
-  render(daysContainer, eventSection.getElement());
+  render(daysContainer, eventSection);
 };
 
 const siteHeader = document.querySelector(`.trip-main`);
@@ -96,9 +94,9 @@ const pageMainContent = document.querySelector(`.page-main .page-body__container
 // const tripEvents = pageMainContent.querySelector(`.trip-events`);
 
 // header
-render(siteHeader, new SectionInfoComponent().getElement(), RenderPosition.AFTERBEGIN);
-render(controlMenu, new TripControlMenuComponent().getElement(), RenderPosition.AFTEREND);
-render(tripControl, new TripMainFilterComponent().getElement());
+render(siteHeader, new SectionInfoComponent(), RenderPosition.AFTERBEGIN);
+render(controlMenu, new TripControlMenuComponent(), RenderPosition.AFTEREND);
+render(tripControl, new TripMainFilterComponent());
 
 // main
 renderDays(pageMainContent, events);
