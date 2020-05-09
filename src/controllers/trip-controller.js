@@ -1,4 +1,4 @@
-import TripSortComponent from '../components/sort.js';
+import TripSortComponent, {SortType} from '../components/sort.js';
 import EventComponent from '../components/event.js';
 import EventEditComponent from '../components/event-edit.js';
 import DaysComponent from '../components/days.js';
@@ -55,31 +55,60 @@ const renderDay = (tripDayList, eventsOnDay, day) => {
   render(tripDayList, dayComponent);
 };
 
+const getSortedTrip = (trips, sortType) => {
+  let sortedTrips = [];
+  const showingTrips = trips.slice();
+  switch (sortType) {
+    case SortType.EVENT:
+      sortedTrips = showingTrips;
+      break;
+    case SortType.TIME:
+      sortedTrips = showingTrips.sort((a, b) => a.duration - b.duration);
+      break;
+    case SortType.PRICE:
+      sortedTrips = showingTrips.sort((a, b) => b.eventPrice - a.eventPrice);
+  }
+
+  return sortedTrips;
+};
+
 export default class TripController {
   constructor(container) {
     this._container = container;
+
+    this._tripSortComponent = new TripSortComponent();
   }
 
   // отрисовка всех событий
   renderTrips(allEvents) {
     const eventSectionComponent = new EventsComponent();
     const daysComponent = new DaysComponent();
+    const daysContainer = daysComponent.getElement();
 
     if (Object.keys(allEvents).length === 0) {
       render(eventSectionComponent.getElement(), new NoEventsComponent());
       return;
     }
 
-    render(eventSectionComponent.getElement(), new TripSortComponent());
+    render(eventSectionComponent.getElement(), this._tripSortComponent);
     render(eventSectionComponent.getElement(), daysComponent);
 
     const eventsOnDay = allEvents; // нужно дописать выборку событий из общего списка событий allEvents
     for (let i = 0; i < DAY_COUNT; i++) {
-      renderDay(daysComponent.getElement(), eventsOnDay, i + 1);
+      renderDay(daysContainer, eventsOnDay, i + 1);
     }
 
-    const daysContainer = this._container;
+    const mainContainer = this._container;
 
-    render(daysContainer, eventSectionComponent);
+    render(mainContainer, eventSectionComponent);
+
+    this._tripSortComponent.setSortTypeChangeHandler((sortType) => {
+      const sortedTrips = getSortedTrip(allEvents, sortType);
+
+      daysContainer.innerHTML = ``;
+      for (let i = 0; i < DAY_COUNT; i++) {
+        renderDay(daysContainer, sortedTrips, i + 1);
+      }
+    });
   }
 }
