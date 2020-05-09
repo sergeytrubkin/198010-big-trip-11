@@ -1,4 +1,5 @@
-import {castTimeFormat, formatTime, formatDate, createElement} from '../utils.js';
+import AbstractComponent from '../components/abstract-component.js';
+import {castTimeFormat, formatTime, formatDate} from '../utils/common.js';
 
 const MILLISECOND_IN_SECOND = 1000;
 const SECOND_IN_MINUTE = 60;
@@ -51,6 +52,7 @@ const createEventTemplate = (event) => {
     .map((offer) => {
       return createDayEventOfferTemplate(offer);
     })
+    .slice(0, 3)
     .join(`\n`);
 
   return (
@@ -86,25 +88,18 @@ const createEventTemplate = (event) => {
     </li>`);
 };
 
-export default class Event {
+export default class Event extends AbstractComponent {
   constructor(point) {
+    super();
+
     this._point = point;
-    this._element = null;
   }
 
   getTemplate() {
     return createEventTemplate(this._point);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+  setEditButtonClickHandler(handler) {
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, handler);
   }
 }

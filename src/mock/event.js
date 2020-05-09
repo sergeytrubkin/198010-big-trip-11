@@ -1,5 +1,5 @@
 import {TYPES_EVENT_TRANSFER, TYPES_EVENT_ACTIVITY, DESTINATION_EVENTS} from '../const.js';
-import {getRandomBetween, getRandomElement, getRandomMultipleNumber} from '../utils.js';
+import {getRandomBetween, getRandomElement, getRandomMultipleNumber} from '../utils/common.js';
 
 const DESCRIPTIONS = [
   `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
