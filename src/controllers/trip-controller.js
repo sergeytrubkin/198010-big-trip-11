@@ -44,7 +44,7 @@ const renderEvent = (tripEventList, event, indexID) => {
 };
 
 // отрисовка одного дня
-const renderDay = (tripDayList, eventsOnDay, day) => {
+const renderDay = (tripDayList, eventsOnDay, day = 0) => {
   const dayComponent = new DayComponent(eventsOnDay, day);
   const eventList = dayComponent.getElement().querySelector(`.trip-events__list`);
 
@@ -63,10 +63,16 @@ const getSortedTrip = (trips, sortType) => {
       sortedTrips = showingTrips;
       break;
     case SortType.TIME:
-      sortedTrips = showingTrips.sort((a, b) => a.duration - b.duration);
+      sortedTrips = showingTrips.sort((a, b) => {
+        const firstDate = new Date(a.endTimeEvent - a.startTimeEvent);
+        const secondDate = new Date(b.endTimeEvent - b.startTimeEvent);
+
+        return secondDate - firstDate;
+      });
       break;
     case SortType.PRICE:
       sortedTrips = showingTrips.sort((a, b) => b.eventPrice - a.eventPrice);
+      break;
   }
 
   return sortedTrips;
@@ -76,7 +82,7 @@ export default class TripController {
   constructor(container) {
     this._container = container;
 
-    this._tripSortComponent = new TripSortComponent();
+    this._tripSortComponent = new TripSortComponent(SortType.EVENT);
   }
 
   // отрисовка всех событий
@@ -104,10 +110,17 @@ export default class TripController {
 
     this._tripSortComponent.setSortTypeChangeHandler((sortType) => {
       const sortedTrips = getSortedTrip(allEvents, sortType);
+      const sortDay = this._tripSortComponent.getElement().querySelector(`.trip-sort__item--day`);
 
       daysContainer.innerHTML = ``;
-      for (let i = 0; i < DAY_COUNT; i++) {
-        renderDay(daysContainer, sortedTrips, i + 1);
+      if (sortType === SortType.EVENT) {
+        sortDay.innerHTML = `Day`;
+        for (let i = 0; i < DAY_COUNT; i++) {
+          renderDay(daysContainer, sortedTrips, i + 1);
+        }
+      } else {
+        sortDay.innerHTML = ``;
+        renderDay(daysContainer, sortedTrips);
       }
     });
   }
