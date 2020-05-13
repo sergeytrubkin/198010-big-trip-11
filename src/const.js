@@ -13,7 +13,7 @@ const MONTHS = [
   `DEC`,
 ];
 
-const TYPES_EVENT_TRANSFER = [
+const TYPES_POINT_TRANSFER = [
   `taxi`,
   `bus`,
   `train`,
@@ -23,13 +23,13 @@ const TYPES_EVENT_TRANSFER = [
   `flight`,
 ];
 
-const TYPES_EVENT_ACTIVITY = [
+const TYPES_POINT_ACTIVITY = [
   `check-in`,
   `sightseeing`,
   `restaurant`,
 ];
 
-const DESTINATION_EVENTS = [
+const DESTINATION_POINTS = [
   `Chamonix`,
   `Geneva`,
   `Amsterdam`,
@@ -38,4 +38,4 @@ const DESTINATION_EVENTS = [
   `Vitebsk`,
 ];
 
-export {MONTHS, TYPES_EVENT_TRANSFER, TYPES_EVENT_ACTIVITY, DESTINATION_EVENTS};
+export {MONTHS, TYPES_POINT_TRANSFER, TYPES_POINT_ACTIVITY, DESTINATION_POINTS};

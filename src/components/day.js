@@ -3,7 +3,7 @@ import {MONTHS} from '../const.js';
 import {formatDate} from '../utils/common.js';
 
 const createDayTemplate = (points, dayCount) => {
-  const startTime = points[0].startTimeEvent;
+  const startTime = points[0].startTimePoint;
   const starTimeDayISO = formatDate(startTime, true);
   const startDay = dayCount ? `${MONTHS[startTime.getMonth()]} ${startTime.getDate()}` : ``;
   const currentDayCount = dayCount ? dayCount : ``;

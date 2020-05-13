@@ -1,13 +1,13 @@
-import TripController from './controllers/trip-controller.js';
+import TripController from './controllers/trip.js';
 import TripControlMenuComponent from './components/trip-control.js';
 import TripMainFilterComponent from './components/filter.js';
 import SectionInfoComponent from './components/section-info.js';
-import {generateEvents} from './mock/event.js';
+import {generatePoints} from './mock/point.js';
 import {RenderPosition, render} from './utils/render.js';
 
 // const DAY_COUNT = 7;
-const EVENT_COUNT = 5;
-const events = generateEvents(EVENT_COUNT);
+const POINT_COUNT = 5;
+const points = generatePoints(POINT_COUNT);
 
 const siteHeader = document.querySelector(`.trip-main`);
 const tripControl = document.querySelector(`.trip-controls`);
@@ -21,4 +21,4 @@ render(tripControl, new TripMainFilterComponent());
 
 // main
 const tripController = new TripController(pageMainContent);
-tripController.renderTrips(events);
+tripController.renderTrips(points);
