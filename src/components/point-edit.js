@@ -83,7 +83,7 @@ export const createDescriptionTemplate = (description, linksPhoto) => {
 
 // форма создания(редактирования) пути
 const createEventEditTemplate = (event) => {
-  const {id, pointType, destination, startTimePoint, endTimePoint, pointPrice, offers, description, photo} = event;
+  const {id, pointType, destination, startTimePoint, endTimePoint, pointPrice, offers, description, photo, isFavorite} = event;
 
   const nowDate = new Date();
   const startTimeDefined = startTimePoint ? startTimePoint : nowDate;
@@ -178,7 +178,7 @@ const createEventEditTemplate = (event) => {
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
           <button class="event__reset-btn" type="reset">Cancel</button>
 
-          <input id="event-favorite-${id}" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" checked>
+          <input id="event-favorite-${id}" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${isFavorite ? `checked` : ``}>
           <label class="event__favorite-btn" for="event-favorite-${id}">
             <span class="visually-hidden">Add to favorite</span>
             <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
@@ -210,5 +210,9 @@ export default class PointEdit extends AbstractComponent {
 
   setSubmitHandler(handler) {
     this.getElement().querySelector(`form`).addEventListener(`submit`, handler);
+  }
+
+  setFavoriteButtonClickHandler(handler) {
+    this.getElement().querySelector(`.event__favorite-btn`).addEventListener(`click`, handler);
   }
 }

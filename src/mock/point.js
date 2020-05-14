@@ -86,6 +86,7 @@ const generatePoint = () => {
     offers: getRandomArrayLength(0, offersPoint),
     description: getRandomArrayLength(1, DESCRIPTIONS),
     photo: getRandomArrayLength(1, LINKS_PHOTO),
+    isFavorite: Math.random() > 0.5,
   };
 };
 

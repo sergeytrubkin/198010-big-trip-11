@@ -27,7 +27,7 @@ const createPointTemplate = (point) => {
   const startTimePointForUser = formatTime(startTimePoint);
   const endTimePointForUser = formatTime(endTimePoint);
 
-  const eventDuration = (startTime, endTime) => {
+  const pointDuration = (startTime, endTime) => {
 
     const diffTimeMinute = (endTime - startTime) / MILLISECOND_IN_SECOND / SECOND_IN_MINUTE;
     const correctTimeMinutes = castTimeFormat(Math.floor(diffTimeMinute % MINUTE_IN_HOUR));
@@ -46,7 +46,7 @@ const createPointTemplate = (point) => {
     return duration;
   };
 
-  const duration = eventDuration(startTimePoint, endTimePoint);
+  const duration = pointDuration(startTimePoint, endTimePoint);
 
   const offerMarkup = offers
     .map((offer) => {

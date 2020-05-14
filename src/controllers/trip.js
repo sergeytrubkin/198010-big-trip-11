@@ -9,12 +9,12 @@ import {render} from '../utils/render.js';
 const DAY_COUNT = 7;
 
 // отрисовка одного дня
-const renderDay = (tripDayList, pointsOnDay, day = 0) => {
+const renderDay = (tripDayList, pointsOnDay, onDataChange, day = 0) => {
   const dayComponent = new DayComponent(pointsOnDay, day);
   const pointsList = dayComponent.getElement().querySelector(`.trip-events__list`);
 
   pointsOnDay.map((point) => {
-    const pointController = new PointController(pointsList);
+    const pointController = new PointController(pointsList, onDataChange);
 
     pointController.render(point);
   });
@@ -49,11 +49,16 @@ export default class TripController {
   constructor(container) {
     this._container = container;
 
+    this._points = [];
+    this._onDataChange = this._onDataChange.bind(this);
+
     this._tripSortComponent = new TripSortComponent(SortType.point);
   }
 
   // отрисовка всех событий
   renderTrips(points) {
+    this._points = points;
+
     const pointSectionComponent = new PointsComponent();
     const daysComponent = new DaysComponent();
     const daysContainer = daysComponent.getElement();
@@ -68,7 +73,7 @@ export default class TripController {
 
     const pointsOnDay = points; // нужно дописать выборку событий из общего списка событий trips
     for (let i = 0; i < DAY_COUNT; i++) {
-      renderDay(daysContainer, pointsOnDay, i + 1);
+      renderDay(daysContainer, pointsOnDay, this._onDataChange, i + 1);
     }
 
     const mainContainer = this._container;
@@ -90,5 +95,17 @@ export default class TripController {
         renderDay(daysContainer, sortedTrips);
       }
     });
+  }
+
+  _onDataChange(pointController, oldData, newData) {
+    const index = this._points.findIndex((point) => point === oldData);
+
+    if (index === -1) {
+      return;
+    }
+
+    this._points = [].concat(this._points.slice(0, index), newData, this._points.slice(index + 1));
+
+    pointController.render(this._points[index]);
   }
 }
