@@ -15,8 +15,6 @@ const createDayTemplate = (points, dayCount) => {
       <time class="day__date" datetime="${starTimeDayISO}">${startDay}</time>
     </div>
 
-    <ul class="trip-events__list">
-    </ul>
   </li>`);
 };
 
