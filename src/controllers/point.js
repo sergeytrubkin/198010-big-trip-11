@@ -15,6 +15,8 @@ export default class PointController {
 
   // отрисовка одного события
   render(point) {
+    const oldPointComponent = this._pointComponent;
+    const oldPointEditComponent = this._pointEditComponent;
 
     this._pointComponent = new PointComponent(point);
     this._pointEditComponent = new PointEditComponent(point);
@@ -31,10 +33,15 @@ export default class PointController {
     });
 
     this._pointEditComponent.setFavoriteButtonClickHandler(() => {
-      this._onDataChange(point, Object.assign({}, point, {isFavorite: !point.isFavorite}));
+      this._onDataChange(this, point, Object.assign({}, point, {isFavorite: !point.isFavorite}));
     });
 
-    render(this._container, this._pointComponent);
+    if (oldPointComponent && oldPointEditComponent) {
+      replace(this._pointComponent, oldPointComponent);
+      replace(this._pointEditComponent, oldPointEditComponent);
+    } else {
+      render(this._container, this._pointComponent);
+    }
   }
 
   // функция замены точки маршрута с режима просмотра в режим редактирования и обратно
