@@ -95,7 +95,7 @@ const createEventEditTemplate = (event) => {
   const endTime = `${formatDate(endTimeDefined)} ${formatTime(endTimeDefined)}`;
   const price = pointPrice ? pointPrice : ``;
   const descriptionMarkup = description || photo ? createDescriptionTemplate(description, photo) : ``;
-  const offersMarkup = offers ? createOffersTemplate(offers) : ``;
+  const offersMarkup = offers.length ? createOffersTemplate(offers) : ``;
 
   const typesPointTransferMarkup = TYPES_POINT_TRANSFER
     .map((it) => {
