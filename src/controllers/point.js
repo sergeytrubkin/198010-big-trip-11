@@ -2,10 +2,17 @@ import PointComponent from '../components/point.js';
 import PointEditComponent from '../components/point-edit.js';
 import {render, replace} from '../utils/render.js';
 
+const Mode = {
+  DEFAULT: `default`,
+  EDIT: `edit`,
+};
+
 export default class PointController {
-  constructor(container, onDataChange) {
+  constructor(container, onDataChange, onViewChange) {
     this._container = container;
     this._onDataChange = onDataChange;
+    this._onViewChange = onViewChange;
+    this._mode = Mode.DEFAULT;
 
     this._pointComponent = null;
     this._pointEditComponent = null;
@@ -44,9 +51,17 @@ export default class PointController {
     }
   }
 
+  setDefaultView() {
+    if (this._mode !== Mode.DEFAULT) {
+      this._replaceEditToPoint();
+    }
+  }
+
   // функция замены точки маршрута с режима просмотра в режим редактирования и обратно
   _replacePointToEdit() {
+    this._onViewChange();
     replace(this._pointEditComponent, this._pointComponent);
+    this._mode = Mode.EDIT;
   }
 
   _replaceEditToPoint() {
