@@ -1,4 +1,4 @@
-import AbstractComponent from './abstract-component.js';
+import AbstractSmartComponent from './abstract-smart-component.js';
 import {TYPES_POINT_TRANSFER, TYPES_POINT_ACTIVITY, DESTINATION_POINTS} from '../const.js';
 import {formatTime, formatDate} from '../utils/common.js';
 
@@ -82,8 +82,9 @@ export const createDescriptionTemplate = (description, linksPhoto) => {
 };
 
 // форма создания(редактирования) пути
-const createEventEditTemplate = (event) => {
-  const {id, pointType, destination, startTimePoint, endTimePoint, pointPrice, offers, description, photo, isFavorite} = event;
+const createEventEditTemplate = (event, options = {}) => {
+  const {id, destination, startTimePoint, endTimePoint, pointPrice, offers, description, photo, isFavorite} = event;
+  const {pointType} = options;
 
   const nowDate = new Date();
   const startTimeDefined = startTimePoint ? startTimePoint : nowDate;
@@ -197,22 +198,46 @@ const createEventEditTemplate = (event) => {
     </li>`);
 };
 
-export default class PointEdit extends AbstractComponent {
+export default class PointEdit extends AbstractSmartComponent {
   constructor(point) {
     super();
 
     this._point = point;
+    this._pointType = this._point.pointType;
+    this._submitHandler = null;
+    this._favoriteHandler = null;
+
+    this._changeType();
   }
 
   getTemplate() {
-    return createEventEditTemplate(this._point);
+    return createEventEditTemplate(this._point, {
+      pointType: this._pointType,
+    });
+  }
+
+  recoveryListeners() {
+    this.setFavoriteButtonClickHandler(this._favoriteHandler);
+    this.setSubmitHandler(this._submitHandler);
+    this._changeType();
   }
 
   setSubmitHandler(handler) {
     this.getElement().querySelector(`form`).addEventListener(`submit`, handler);
+    this._submitHandler = handler;
   }
 
   setFavoriteButtonClickHandler(handler) {
     this.getElement().querySelector(`.event__favorite-btn`).addEventListener(`click`, handler);
+    this._favoriteHandler = handler;
+  }
+
+  _changeType() {
+    this.getElement().querySelector(`.event__type-list`)
+      .addEventListener(`change`, (evt) => {
+        this._pointType = evt.target.value;
+
+        this.rerender();
+      });
   }
 }
