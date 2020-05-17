@@ -7,7 +7,7 @@ const MINUTE_IN_HOUR = 60;
 const MINUTE_IN_DAY = 1440;
 const HOUR_IN_DAY = 24;
 
-const createDayEventOfferTemplate = (offer) => {
+const createDayPointOfferTemplate = (offer) => {
   const {title, cost} = offer;
 
   return (
@@ -19,15 +19,15 @@ const createDayEventOfferTemplate = (offer) => {
 };
 
 
-const createEventTemplate = (event) => {
-  const {eventType, destination, startTimeEvent, endTimeEvent, eventPrice, offers} = event;
+const createPointTemplate = (point) => {
+  const {pointType, destination, startTimePoint, endTimePoint, pointPrice, offers} = point;
 
-  const startTimeISO = `${formatDate(startTimeEvent, true)}T${formatTime(startTimeEvent)}`;
-  const endTimeISO = `${formatDate(endTimeEvent, true)}T${formatTime(endTimeEvent)}`;
-  const startTimeEventForUser = formatTime(startTimeEvent);
-  const endTimeEventForUser = formatTime(endTimeEvent);
+  const startTimeISO = `${formatDate(startTimePoint, true)}T${formatTime(startTimePoint)}`;
+  const endTimeISO = `${formatDate(endTimePoint, true)}T${formatTime(endTimePoint)}`;
+  const startTimePointForUser = formatTime(startTimePoint);
+  const endTimePointForUser = formatTime(endTimePoint);
 
-  const eventDuration = (startTime, endTime) => {
+  const pointDuration = (startTime, endTime) => {
 
     const diffTimeMinute = (endTime - startTime) / MILLISECOND_IN_SECOND / SECOND_IN_MINUTE;
     const correctTimeMinutes = castTimeFormat(Math.floor(diffTimeMinute % MINUTE_IN_HOUR));
@@ -46,11 +46,11 @@ const createEventTemplate = (event) => {
     return duration;
   };
 
-  const duration = eventDuration(startTimeEvent, endTimeEvent);
+  const duration = pointDuration(startTimePoint, endTimePoint);
 
   const offerMarkup = offers
     .map((offer) => {
-      return createDayEventOfferTemplate(offer);
+      return createDayPointOfferTemplate(offer);
     })
     .slice(0, 3)
     .join(`\n`);
@@ -59,21 +59,21 @@ const createEventTemplate = (event) => {
     `<li class="trip-events__item">
       <div class="event">
         <div class="event__type">
-          <img class="event__type-icon" width="42" height="42" src="img/icons/${eventType}.png" alt="Event type icon">
+          <img class="event__type-icon" width="42" height="42" src="img/icons/${pointType}.png" alt="Event type icon">
         </div>
-        <h3 class="event__title">${eventType} to ${destination}</h3>
+        <h3 class="event__title">${pointType} to ${destination}</h3>
 
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="${startTimeISO}">${startTimeEventForUser}</time>
+            <time class="event__start-time" datetime="${startTimeISO}">${startTimePointForUser}</time>
             &mdash;
-            <time class="event__end-time" datetime="${endTimeISO}">${endTimeEventForUser}</time>
+            <time class="event__end-time" datetime="${endTimeISO}">${endTimePointForUser}</time>
           </p>
           <p class="event__duration">${duration}</p>
         </div>
 
         <p class="event__price">
-          &euro;&nbsp;<span class="event__price-value">${eventPrice}</span>
+          &euro;&nbsp;<span class="event__price-value">${pointPrice}</span>
         </p>
 
         <h4 class="visually-hidden">Offers:</h4>
@@ -96,7 +96,7 @@ export default class Event extends AbstractComponent {
   }
 
   getTemplate() {
-    return createEventTemplate(this._point);
+    return createPointTemplate(this._point);
   }
 
   setEditButtonClickHandler(handler) {

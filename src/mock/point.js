@@ -1,4 +1,4 @@
-import {TYPES_EVENT_TRANSFER, TYPES_EVENT_ACTIVITY, DESTINATION_EVENTS} from '../const.js';
+import {TYPES_POINT_TRANSFER, TYPES_POINT_ACTIVITY, DESTINATION_POINTS} from '../const.js';
 import {getRandomBetween, getRandomElement, getRandomMultipleNumber} from '../utils/common.js';
 
 const DESCRIPTIONS = [
@@ -17,7 +17,7 @@ const LINKS_PHOTO = [
   `img/photos/5.jpg`,
 ];
 
-const offersEvent = [
+const offersPoint = [
   {
     type: `luggage`,
     title: `Add luggage`,
@@ -45,7 +45,7 @@ const offersEvent = [
   }
 ];
 
-const ALL_TYPES_EVENTS = TYPES_EVENT_ACTIVITY.concat(TYPES_EVENT_TRANSFER);
+const ALL_TYPES_POINTS = TYPES_POINT_ACTIVITY.concat(TYPES_POINT_TRANSFER);
 const MIN_PRICE = 20;
 const MAX_PRICE = 400;
 const MULTIPLE = 10;
@@ -65,23 +65,35 @@ const getRandomDate = () => {
   return targetDate;
 };
 
-const generateEvent = () => {
-  return {
-    eventType: getRandomElement(ALL_TYPES_EVENTS),
-    destination: getRandomElement(DESTINATION_EVENTS),
-    startTimeEvent: new Date(),
-    endTimeEvent: getRandomDate(),
-    eventPrice: getRandomMultipleNumber(MIN_PRICE, MAX_PRICE, MULTIPLE),
-    offers: getRandomArrayLength(0, offersEvent),
-    description: getRandomArrayLength(1, DESCRIPTIONS),
-    photo: getRandomArrayLength(1, LINKS_PHOTO),
+const numberCounter = () => {
+  let currentCount = 1;
+
+  return function () {
+    return currentCount++;
   };
 };
 
-const generateEvents = (count) => {
-  return new Array(count)
-    .fill(``)
-    .map(generateEvent);
+let getIdNumber = numberCounter();
+
+const generatePoint = () => {
+  return {
+    id: getIdNumber(),
+    pointType: getRandomElement(ALL_TYPES_POINTS),
+    destination: getRandomElement(DESTINATION_POINTS),
+    startTimePoint: new Date(),
+    endTimePoint: getRandomDate(),
+    pointPrice: getRandomMultipleNumber(MIN_PRICE, MAX_PRICE, MULTIPLE),
+    offers: getRandomArrayLength(0, offersPoint),
+    description: getRandomArrayLength(1, DESCRIPTIONS),
+    photo: getRandomArrayLength(1, LINKS_PHOTO),
+    isFavorite: Math.random() > 0.5,
+  };
 };
 
-export {generateEvents};
+const generatePoints = (count) => {
+  return new Array(count)
+    .fill(``)
+    .map(generatePoint);
+};
+
+export {generatePoints};

@@ -1,8 +1,8 @@
-import AbstractComponent from '../components/abstract-component.js';
-import {TYPES_EVENT_TRANSFER, TYPES_EVENT_ACTIVITY, DESTINATION_EVENTS} from '../const.js';
+import AbstractSmartComponent from './abstract-smart-component.js';
+import {TYPES_POINT_TRANSFER, TYPES_POINT_ACTIVITY, DESTINATION_POINTS} from '../const.js';
 import {formatTime, formatDate} from '../utils/common.js';
 
-const createTypeEventTemplate = (type, index) => {
+const createTypePointTemplate = (type, index) => {
   const uppercaseType = type[0].toUpperCase() + type.slice(1);
 
   return (
@@ -14,8 +14,8 @@ const createTypeEventTemplate = (type, index) => {
 };
 
 const createDestinationItemTemplate = (destination) => {
-  return (`
-  <option value="${destination}"></option>`);
+  return (
+    `<option value="${destination}"></option>`);
 };
 
 // шаблон одного предложения
@@ -82,101 +82,114 @@ export const createDescriptionTemplate = (description, linksPhoto) => {
 };
 
 // форма создания(редактирования) пути
-const createEventEditTemplate = (event, indexId) => {
-  const {eventType, destination, startTimeEvent, endTimeEvent, eventPrice, offers, description, photo} = event;
+const createEventEditTemplate = (event, options = {}) => {
+  const {id, startTimePoint, endTimePoint, pointPrice, offers, description, photo, isFavorite} = event;
+  const {pointType, destination} = options;
 
   const nowDate = new Date();
-  const startTimeDefined = startTimeEvent ? startTimeEvent : nowDate;
-  const endTimeDefined = endTimeEvent ? endTimeEvent : nowDate;
+  const startTimeDefined = startTimePoint ? startTimePoint : nowDate;
+  const endTimeDefined = endTimePoint ? endTimePoint : nowDate;
 
-  const typeEvent = eventType ? eventType : TYPES_EVENT_TRANSFER[0];
+  const typePoint = pointType ? pointType : TYPES_POINT_TRANSFER[0];
   const destinationEvent = destination ? destination : ``;
   const startTime = `${formatDate(startTimeDefined)} ${formatTime(startTimeDefined)}`;
   const endTime = `${formatDate(endTimeDefined)} ${formatTime(endTimeDefined)}`;
-  const price = eventPrice ? eventPrice : ``;
+  const price = pointPrice ? pointPrice : ``;
   const descriptionMarkup = description || photo ? createDescriptionTemplate(description, photo) : ``;
-  const offersMarkup = offers ? createOffersTemplate(offers) : ``;
+  const offersMarkup = offers.length ? createOffersTemplate(offers) : ``;
 
-  const typesEventTransferMarkup = TYPES_EVENT_TRANSFER
+  const typesPointTransferMarkup = TYPES_POINT_TRANSFER
     .map((it) => {
-      return createTypeEventTemplate(it, indexId);
+      return createTypePointTemplate(it, id);
     })
     .join(`\n`);
 
-  const typesEventActivityMarkup = TYPES_EVENT_ACTIVITY
+  const typesPointActivityMarkup = TYPES_POINT_ACTIVITY
     .map((it) => {
-      return createTypeEventTemplate(it, indexId);
+      return createTypePointTemplate(it, id);
     })
     .join(`\n`);
 
-  const destinationsMarkup = DESTINATION_EVENTS
+  const destinationsMarkup = DESTINATION_POINTS
     .map((it) => {
       return createDestinationItemTemplate(it);
     })
     .join(`\n`);
-
 
   return (
     `<li class="trip-events__item">
       <form class="trip-events__item  event  event--edit" action="#" method="post">
         <header class="event__header">
           <div class="event__type-wrapper">
-            <label class="event__type  event__type-btn" for="event-type-toggle-${indexId}">
+            <label class="event__type  event__type-btn" for="event-type-toggle-${id}">
               <span class="visually-hidden">Choose event type</span>
-              <img class="event__type-icon" width="17" height="17" src="img/icons/${typeEvent}.png"
+              <img class="event__type-icon" width="17" height="17" src="img/icons/${typePoint}.png"
                 alt="Event type icon">
             </label>
-            <input class="event__type-toggle  visually-hidden" id="event-type-toggle-${indexId}" type="checkbox">
+            <input class="event__type-toggle  visually-hidden" id="event-type-toggle-${id}" type="checkbox">
 
             <div class="event__type-list">
               <fieldset class="event__type-group">
                 <legend class="visually-hidden">Transfer</legend>
-                ${typesEventTransferMarkup}
+                ${typesPointTransferMarkup}
               </fieldset>
 
               <fieldset class="event__type-group">
                 <legend class="visually-hidden">Activity</legend>
-                ${typesEventActivityMarkup}
+                ${typesPointActivityMarkup}
               </fieldset>
             </div>
           </div>
 
           <div class="event__field-group  event__field-group--destination">
-            <label class="event__label  event__type-output" for="event-destination-${indexId}">
-              ${typeEvent} to
+            <label class="event__label  event__type-output" for="event-destination-${id}">
+              ${typePoint} to
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-${indexId}" type="text"
-              name="event-destination" value="${destinationEvent}" list="destination-list-${indexId}">
-            <datalist id="destination-list-${indexId}">
+            <input class="event__input  event__input--destination" id="event-destination-${id}" type="text"
+              name="event-destination" value="${destinationEvent}" list="destination-list-${id}">
+            <datalist id="destination-list-${id}">
               ${destinationsMarkup}
             </datalist>
           </div>
 
           <div class="event__field-group  event__field-group--time">
-            <label class="visually-hidden" for="event-start-time-${indexId}">
+            <label class="visually-hidden" for="event-start-time-${id}">
               From
             </label>
-            <input class="event__input  event__input--time" id="event-start-time-${indexId}" type="text" name="event-start-time"
+            <input class="event__input  event__input--time" id="event-start-time-${id}" type="text" name="event-start-time"
               value="${startTime}">
             &mdash;
-            <label class="visually-hidden" for="event-end-time-${indexId}">
+            <label class="visually-hidden" for="event-end-time-${id}">
               To
             </label>
-            <input class="event__input  event__input--time" id="event-end-time-${indexId}" type="text" name="event-end-time"
+            <input class="event__input  event__input--time" id="event-end-time-${id}" type="text" name="event-end-time"
               value="${endTime}">
           </div>
 
           <div class="event__field-group  event__field-group--price">
-            <label class="event__label" for="event-price-${indexId}">
+            <label class="event__label" for="event-price-${id}">
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price-${indexId}" type="text" name="event-price"
+            <input class="event__input  event__input--price" id="event-price-${id}" type="text" name="event-price"
               value="${price}">
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
           <button class="event__reset-btn" type="reset">Cancel</button>
+
+          <input id="event-favorite-${id}" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${isFavorite ? `checked` : ``}>
+          <label class="event__favorite-btn" for="event-favorite-${id}">
+            <span class="visually-hidden">Add to favorite</span>
+            <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
+              <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
+            </svg>
+          </label>
+
+          <button class="event__rollup-btn" type="button">
+            <span class="visually-hidden">Open event</span>
+          </button>
+
         </header>
         ${offersMarkup}
         ${descriptionMarkup}
@@ -184,19 +197,59 @@ const createEventEditTemplate = (event, indexId) => {
     </li>`);
 };
 
-export default class EventEdit extends AbstractComponent {
-  constructor(event, indexId) {
+export default class PointEdit extends AbstractSmartComponent {
+  constructor(point) {
     super();
 
-    this._event = event;
-    this._indexId = indexId;
+    this._point = point;
+    this._pointType = this._point.pointType;
+    this._pointDestination = this._point.destination;
+    this._submitHandler = null;
+    this._favoriteHandler = null;
+
+    this._changeType();
+    this._changeDestination();
   }
 
   getTemplate() {
-    return createEventEditTemplate(this._event, this._indexId);
+    return createEventEditTemplate(this._point, {
+      pointType: this._pointType,
+      destination: this._pointDestination,
+    });
+  }
+
+  recoveryListeners() {
+    this.setFavoriteButtonClickHandler(this._favoriteHandler);
+    this.setSubmitHandler(this._submitHandler);
+    this._changeType();
+    this._changeDestination();
   }
 
   setSubmitHandler(handler) {
     this.getElement().querySelector(`form`).addEventListener(`submit`, handler);
+    this._submitHandler = handler;
+  }
+
+  setFavoriteButtonClickHandler(handler) {
+    this.getElement().querySelector(`.event__favorite-btn`).addEventListener(`click`, handler);
+    this._favoriteHandler = handler;
+  }
+
+  _changeType() {
+    this.getElement().querySelector(`.event__type-list`)
+      .addEventListener(`change`, (evt) => {
+        this._pointType = evt.target.value;
+
+        this.rerender();
+      });
+  }
+
+  _changeDestination() {
+    this.getElement().querySelector(`.event__input--destination`)
+      .addEventListener(`change`, (evt) => {
+        this._pointDestination = evt.target.value;
+
+        this.rerender();
+      });
   }
 }
