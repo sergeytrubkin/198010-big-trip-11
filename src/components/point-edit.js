@@ -1,6 +1,9 @@
 import AbstractSmartComponent from './abstract-smart-component.js';
 import {TYPES_POINT_TRANSFER, TYPES_POINT_ACTIVITY, DESTINATION_POINTS} from '../const.js';
-import {formatTime, formatDate} from '../utils/common.js';
+import {formatDate} from '../utils/common.js';
+
+import flatpickr from "flatpickr";
+import 'flatpickr/dist/flatpickr.min.css';
 
 const createTypePointTemplate = (type, index) => {
   const uppercaseType = type[0].toUpperCase() + type.slice(1);
@@ -92,8 +95,8 @@ const createEventEditTemplate = (event, options = {}) => {
 
   const typePoint = pointType ? pointType : TYPES_POINT_TRANSFER[0];
   const destinationEvent = destination ? destination : ``;
-  const startTime = `${formatDate(startTimeDefined)} ${formatTime(startTimeDefined)}`;
-  const endTime = `${formatDate(endTimeDefined)} ${formatTime(endTimeDefined)}`;
+  const startTime = formatDate(startTimeDefined);
+  const endTime = formatDate(endTimeDefined);
   const price = pointPrice ? pointPrice : ``;
   const descriptionMarkup = description || photo ? createDescriptionTemplate(description, photo) : ``;
   const offersMarkup = offers.length ? createOffersTemplate(offers) : ``;
@@ -206,7 +209,9 @@ export default class PointEdit extends AbstractSmartComponent {
     this._pointDestination = this._point.destination;
     this._submitHandler = null;
     this._favoriteHandler = null;
+    this._flatpickr = null;
 
+    this._applyFlatpickr();
     this._changeType();
     this._changeDestination();
   }
@@ -223,6 +228,7 @@ export default class PointEdit extends AbstractSmartComponent {
     this.setSubmitHandler(this._submitHandler);
     this._changeType();
     this._changeDestination();
+    this._applyFlatpickr();
   }
 
   setSubmitHandler(handler) {
@@ -233,6 +239,20 @@ export default class PointEdit extends AbstractSmartComponent {
   setFavoriteButtonClickHandler(handler) {
     this.getElement().querySelector(`.event__favorite-btn`).addEventListener(`click`, handler);
     this._favoriteHandler = handler;
+  }
+
+  _applyFlatpickr() {
+    if (this._flatpickr) {
+      this._flatpickr.destroy();
+      this._flatpickr = null;
+    }
+
+    const startTimeElement = this.getElement().querySelector(`#event-start-time-${this._point.id}`);
+    const endTimeElement = this.getElement().querySelector(`#event-end-time-${this._point.id}`);
+    const startTimeValue = this._point.startTimePoint;
+
+    this._flatpickr = this._setFlatpickr(startTimeElement);
+    this._flatpickr = this._setFlatpickr(endTimeElement, startTimeValue);
   }
 
   _changeType() {
@@ -251,5 +271,13 @@ export default class PointEdit extends AbstractSmartComponent {
 
         this.rerender();
       });
+  }
+
+  _setFlatpickr(element, minDatePoint = null) {
+    flatpickr(element, {
+      enableTime: true,
+      minDate: minDatePoint,
+      dateFormat: `d/m/y H:i`,
+    });
   }
 }

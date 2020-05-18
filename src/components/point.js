@@ -1,11 +1,5 @@
 import AbstractComponent from '../components/abstract-component.js';
-import {castTimeFormat, formatTime, formatDate} from '../utils/common.js';
-
-const MILLISECOND_IN_SECOND = 1000;
-const SECOND_IN_MINUTE = 60;
-const MINUTE_IN_HOUR = 60;
-const MINUTE_IN_DAY = 1440;
-const HOUR_IN_DAY = 24;
+import {formatTime, durationTime, formatDate} from '../utils/common.js';
 
 const createDayPointOfferTemplate = (offer) => {
   const {title, cost} = offer;
@@ -18,35 +12,14 @@ const createDayPointOfferTemplate = (offer) => {
     </li>`);
 };
 
-
 const createPointTemplate = (point) => {
   const {pointType, destination, startTimePoint, endTimePoint, pointPrice, offers} = point;
 
-  const startTimeISO = `${formatDate(startTimePoint, true)}T${formatTime(startTimePoint)}`;
-  const endTimeISO = `${formatDate(endTimePoint, true)}T${formatTime(endTimePoint)}`;
+  const startTimeISO = formatDate(startTimePoint, true);
+  const endTimeISO = formatDate(endTimePoint, true);
   const startTimePointForUser = formatTime(startTimePoint);
   const endTimePointForUser = formatTime(endTimePoint);
-
-  const pointDuration = (startTime, endTime) => {
-
-    const diffTimeMinute = (endTime - startTime) / MILLISECOND_IN_SECOND / SECOND_IN_MINUTE;
-    const correctTimeMinutes = castTimeFormat(Math.floor(diffTimeMinute % MINUTE_IN_HOUR));
-    const correctTimeHour = castTimeFormat(Math.floor((diffTimeMinute / MINUTE_IN_HOUR) % HOUR_IN_DAY));
-    const CorrectTimeDay = castTimeFormat(Math.floor(diffTimeMinute / MINUTE_IN_DAY));
-    let duration = ``;
-
-    if (diffTimeMinute < MINUTE_IN_HOUR) {
-      duration = `${correctTimeMinutes}M`;
-    } else if (diffTimeMinute >= MINUTE_IN_HOUR && diffTimeMinute < MINUTE_IN_DAY) {
-      duration = `${correctTimeHour}H ${correctTimeMinutes}M`;
-    } else if (diffTimeMinute > MINUTE_IN_DAY) {
-      duration = `${CorrectTimeDay}D ${correctTimeHour}H ${correctTimeMinutes}M`;
-    }
-
-    return duration;
-  };
-
-  const duration = pointDuration(startTimePoint, endTimePoint);
+  const duration = durationTime(startTimePoint, endTimePoint);
 
   const offerMarkup = offers
     .map((offer) => {

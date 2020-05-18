@@ -1,3 +1,5 @@
+import moment from "moment";
+
 // определение рандомного числа из диапазона чисел
 const getRandomBetween = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -31,21 +33,25 @@ const castTimeFormat = (value) => {
 };
 
 const formatTime = (date) => {
-  const formattedMinutes = castTimeFormat(date.getMinutes());
-  const formattedHours = castTimeFormat(date.getHours());
+  return moment(date).format(`HH:mm`);
+};
 
-  return `${formattedHours}:${formattedMinutes}`;
+const durationTime = (dateStart, dateEnd) => {
+  const duration = moment.duration(dateEnd - dateStart);
+  const days = duration.days();
+  const hours = duration.hours();
+  const minutes = duration.minutes();
+
+  return (
+    `${days ? `${castTimeFormat(days)}D` : ``}
+    ${hours ? `${castTimeFormat(hours)}H` : ``}
+    ${minutes ? `${castTimeFormat(minutes)}M` : ``}
+    `);
 };
 
 // форматирование даты в формат 'dd/mm/yy hh:mm' либо ISO 'yyyy-mm-ddThh:mm' - второй параметр true
 const formatDate = (date, ISO = false) => {
-  const formattedDay = castTimeFormat(date.getDate());
-  const formattedMonth = castTimeFormat(date.getMonth() + 1);
-  const formattedYear = date.getFullYear().toString().substring(2);
-  const formattedFullYear = date.getFullYear();
-
-  return ISO ? `${formattedFullYear}-${formattedMonth}-${formattedDay}` :
-    `${formattedDay}/${formattedMonth}/${formattedYear}`;
+  return ISO ? moment(date).format(`YYYY-MM-DDTHH:mm`) : moment(date).format(`DD/MM/YY HH:mm`);
 };
 
 export {
@@ -55,5 +61,6 @@ export {
   getRandomMultipleNumber,
   castTimeFormat,
   formatTime,
+  durationTime,
   formatDate,
 };
